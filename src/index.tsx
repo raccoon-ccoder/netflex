@@ -1,19 +1,42 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
+import reset from "styled-reset";
+import App from "./App";
+import { theme } from "./theme";
+import { RecoilRoot } from "recoil";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  document.getElementById("root") as HTMLElement
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const GlobalStyle = createGlobalStyle`
+  ${reset}
+  a {
+      text-decoration: none;
+      color: inherit;
+    }
+  * {
+      box-sizing: border-box;
+    }
+  input {
+      border: none;
+  }
+  body {
+    color:black;
+    line-height: 1.2;
+    font-weight: 300;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+`;
+
+root.render(
+  <React.StrictMode>
+    <RecoilRoot>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <App />
+      </ThemeProvider>
+    </RecoilRoot>
+  </React.StrictMode>
+);
