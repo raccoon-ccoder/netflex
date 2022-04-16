@@ -1,15 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useTransform,
-  useViewportScroll,
-} from "framer-motion";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Header from "./Components/Header";
+import Home from "./Routes/Home";
+import Search from "./Routes/Search";
+import Tv from "./Routes/Tv";
 
 function App() {
-  return null;
+  return (
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/tv" element={<Tv />} />
+        <Route path="/search" element={<Search />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

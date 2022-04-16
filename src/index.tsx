@@ -21,6 +21,9 @@ const GlobalStyle = createGlobalStyle`
     }
   input {
       border: none;
+      :focus{
+        outline: none;
+      }
   }
   body {
     color:black;
