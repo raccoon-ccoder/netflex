@@ -17,10 +17,10 @@ const Nav = styled(motion.nav)`
 
 const navVariants = {
   top: {
-    backgroundColor: "rgba(0,0,0,0.4)",
+    background: "linear-gradient(to bottom,rgba(0,0,0,.7) 10%,rgba(0,0,0,0))",
   },
   scroll: {
-    backgroundColor: "rgba(0,0,0,1)",
+    background: "black",
   },
 };
 
