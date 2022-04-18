@@ -1,6 +1,13 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { getMovies, IGetMoviesResult } from "../api/api";
+import {
+  getMovies,
+  getTopRatedMovies,
+  getUpcomingMovies,
+  IGetMoviesResult,
+  IGetTopRatedMovies,
+  IGetUpcomingMovies,
+} from "../api/api";
 import { makeImagePath } from "../util/utils";
 import {
   motion,
@@ -9,6 +16,8 @@ import {
   useViewportScroll,
 } from "framer-motion";
 import { useState } from "react";
+import Slider from "../components/Slider";
+
 import { Navigate, PathMatch, useMatch, useNavigate } from "react-router-dom";
 const Wrapper = styled.div`
   background: black;
@@ -43,7 +52,7 @@ const Overview = styled.p`
   width: 50%;
 `;
 
-const Slider = styled.div`
+const Sliders = styled.div`
   position: relative;
   top: -100px;
 `;
@@ -149,6 +158,31 @@ const BigMovie = styled(motion.div)`
   left: 0;
   right: 0;
   margin: 0 auto;
+  background-color: ${(props) => props.theme.black.lighter};
+  border-radius: 15px;
+  overflow: hidden;
+`;
+
+const BigCover = styled.div`
+  width: 100%;
+  height: 300px;
+  background-size: cover;
+  background-position: center center;
+`;
+
+const BigTitle = styled.h2`
+  color: ${(props) => props.theme.white.lighter};
+  font-size: 30px;
+  position: relative;
+  top: -50px;
+  padding: 10px;
+`;
+
+const BigOverview = styled.p`
+  padding: 10px;
+  position: relative;
+  top: -50px;
+  color: ${(props) => props.theme.white.lighter};
 `;
 
 const offset = 6; // 한번에 보여주고 싶은 영화 수
@@ -158,6 +192,12 @@ function Home() {
     ["movies", "nowPlaying"],
     getMovies
   );
+
+  const { data: topMovies, isLoading: isLoadingTopMovies } =
+    useQuery<IGetTopRatedMovies>(["movies", "topRated"], getTopRatedMovies);
+
+  const { data: upComingMovies, isLoading: isLoadingComingMovies } =
+    useQuery<IGetUpcomingMovies>(["movies", "upComing"], getUpcomingMovies);
 
   const [index, setIndex] = useState(0);
   const increaseIndex = () => {
@@ -200,7 +240,7 @@ function Home() {
     data?.results.find(
       (movie) => movie.id + "" === homeMovieMathch?.params.movieId
     );
-  console.log(clikedMovie);
+
   return (
     <Wrapper>
       {isLoading ? (
@@ -214,7 +254,8 @@ function Home() {
             <Title>{data?.results[0].title}</Title>
             <Overview>{data?.results[0].overview}</Overview>
           </Banner>
-          <Slider>
+          <Sliders>
+            <h1>latest movies</h1>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 key={index}
@@ -245,7 +286,7 @@ function Home() {
                   ))}
               </Row>
             </AnimatePresence>
-          </Slider>
+          </Sliders>
           <AnimatePresence>
             {homeMovieMathch && (
               <>
@@ -259,10 +300,32 @@ function Home() {
                   style={{
                     top: scrollY.get() + 100,
                   }}
-                ></BigMovie>
+                >
+                  {clikedMovie && (
+                    <>
+                      <BigCover
+                        style={{
+                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                            clikedMovie.backdrop_path,
+                            "w500"
+                          )})`,
+                        }}
+                      />
+                      <BigTitle>{clikedMovie.title}</BigTitle>
+                      <BigOverview>{clikedMovie.overview}</BigOverview>
+                    </>
+                  )}
+                </BigMovie>
               </>
             )}
           </AnimatePresence>
+        </>
+      )}
+      {isLoadingTopMovies ? (
+        <Loader>Loading</Loader>
+      ) : (
+        <>
+          <Slider data={topMovies} />
         </>
       )}
     </Wrapper>
