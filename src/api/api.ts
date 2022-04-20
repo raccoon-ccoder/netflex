@@ -19,10 +19,6 @@ export interface IMovie {
 }
 
 export interface IGetMoviesResult {
-  dates: {
-    maximum: string;
-    minimum: string;
-  };
   page: number;
   results: IMovie[];
   total_pages: number;

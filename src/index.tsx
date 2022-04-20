@@ -11,8 +11,6 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
-type ThemeType = typeof theme;
-
 const GlobalStyle = createGlobalStyle`
   ${reset}
   a {
