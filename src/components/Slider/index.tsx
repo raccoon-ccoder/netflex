@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
 import { IGetMoviesResult, IGetUpcomingMovies } from "../../api/api";
@@ -6,11 +6,15 @@ import { Link, PathMatch, useMatch, useNavigate } from "react-router-dom";
 import { makeImagePath } from "../../util/utils";
 import * as S from "./style";
 
-const offset = 6; // 한번에 보여주고 싶은 영화 수
+interface IMoviesProps {
+  data: IGetMoviesResult;
+  title: string;
+}
 
-function Slider(data: IGetMoviesResult) {
+function Slider({ data, title }: IMoviesProps) {
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const [back, setBack] = useState(false);
   // 클릭하면 이전 row가 사라지기 전에 다음 row가 사라지려고 하기에 gap이 커짐
   // 따라서 버튼 클릭시 한 슬라이더가 사라지고 다 사라졌는지 여부를 leaving
   // 다 사라졌을 경우 AnimatePresence onExitComplete={toggleLeaving}으로 설정
@@ -19,9 +23,19 @@ function Slider(data: IGetMoviesResult) {
   const increaseIndex = () => {
     if (leaving) return;
     setLeaving(true);
+    setBack(false);
     const totalMovies = data?.results.length;
     const maxIndex = Math.floor(totalMovies / offset);
     setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+  };
+
+  const decreaseIndex = () => {
+    if (leaving) return;
+    setLeaving(true);
+    setBack(true);
+    const totalMovies = data?.results.length;
+    const maxIndex = Math.floor(totalMovies / offset);
+    setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
   };
 
   // 영화 클릭시 팝업창 생성
@@ -50,47 +64,94 @@ function Slider(data: IGetMoviesResult) {
       (movie: any) => movie.id + "" === homeMovieMathch?.params.movieId
     );
 
+  console.log(clikedMovie);
+
+  const [offset, setOffset] = useState(4);
+  const changeOffset = () => {
+    if (500 <= window.innerWidth && window.innerWidth <= 799) {
+      setOffset(3);
+    } else if (800 <= window.innerWidth && window.innerWidth <= 1099) {
+      setOffset(4);
+    } else if (1100 <= window.innerWidth && window.innerWidth <= 1399) {
+      setOffset(5);
+    } else if (1400 <= window.innerWidth) {
+      setOffset(6);
+    }
+  };
+  useEffect(() => {
+    window.addEventListener("resize", changeOffset);
+    return () => {
+      window.removeEventListener("resize", changeOffset);
+    };
+  }, []);
+
   return (
     <>
       <S.Sliders>
         <S.SliderTitle>
           <Link to="/">
-            <div>신규 콘텐츠</div>
+            <div>{title}</div>
           </Link>
+          <S.ArrowBox>
+            <S.Arrow
+              onClick={decreaseIndex}
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+            >
+              <path d="M224 480c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25l192-192c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L77.25 256l169.4 169.4c12.5 12.5 12.5 32.75 0 45.25C240.4 476.9 232.2 480 224 480z" />
+            </S.Arrow>
+            <S.Arrow
+              onClick={increaseIndex}
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+            >
+              <path d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z" />{" "}
+            </S.Arrow>
+          </S.ArrowBox>
         </S.SliderTitle>
-        <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
-          <button onClick={increaseIndex}>click</button>
-          <S.Row
-            key={index}
-            variants={S.rowVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={{ type: "tween", duration: 1 }}
+        <S.Slider>
+          <AnimatePresence
+            initial={false}
+            onExitComplete={toggleLeaving}
+            custom={back}
           >
-            {data.results
-              .slice(offset * index, offset * index + offset)
-              .map((item) => (
-                <S.RowItem
-                  layoutId={item.id + ""}
-                  key={item.id}
-                  variants={S.boxVariants}
-                  initial="normal"
-                  whileHover="hover"
-                  transition={{ type: "tween" }}
-                  onClick={() => onClicked(item.id)}
-                >
-                  <S.Box bgphoto={makeImagePath(item.backdrop_path)}>
-                    <S.BoxInner>
-                      <S.Info variants={S.infoVariants}>
-                        <h4>{item.title}</h4>
-                      </S.Info>
-                    </S.BoxInner>
-                  </S.Box>
-                </S.RowItem>
-              ))}
-          </S.Row>
-        </AnimatePresence>
+            <S.Row
+              custom={back}
+              key={index}
+              variants={S.rowVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              transition={{ type: "tween", duration: 1 }}
+            >
+              {data.results
+                .slice(offset * index, offset * index + offset)
+                .map((item) => (
+                  <S.RowItem
+                    layoutId={item.id + ""}
+                    key={item.id}
+                    variants={S.boxVariants}
+                    initial="normal"
+                    whileHover="hover"
+                    transition={{ type: "tween" }}
+                    onClick={() => onClicked(item.id)}
+                  >
+                    <S.Box bgphoto={makeImagePath(item.backdrop_path)}>
+                      <S.BoxInner>
+                        <S.Img
+                          variants={S.infoVariants}
+                          bgphoto={makeImagePath(item.backdrop_path)}
+                        />
+                        <S.Info variants={S.infoVariants}>
+                          <S.Title>{item.title}</S.Title>
+                        </S.Info>
+                      </S.BoxInner>
+                    </S.Box>
+                  </S.RowItem>
+                ))}
+            </S.Row>
+          </AnimatePresence>
+        </S.Slider>
       </S.Sliders>
       <AnimatePresence>
         {homeMovieMathch && (
@@ -102,9 +163,9 @@ function Slider(data: IGetMoviesResult) {
             ></S.Overlay>
             <S.BigMovie
               layoutId={homeMovieMathch.params.movieId}
-              style={{
-                top: scrollY.get() + 100,
-              }}
+              // style={{
+              //   top: scrollY.get() - 450,
+              // }}
             >
               {clikedMovie && (
                 <>
