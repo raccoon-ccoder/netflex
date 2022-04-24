@@ -194,13 +194,14 @@ export const BigMovie = styled(motion.div)`
   position: absolute;
   max-width: 850px;
   width: calc(100% * 10 / 11);
-  height: 800px;
+  height: 800px; // 나중에 수정
   left: 0;
   right: 0;
   margin: 0 auto;
-  background-color: ${(props) => props.theme.black.lighter};
+  /* background-color: ${(props) => props.theme.black.lighter}; */
   border-radius: 15px;
   overflow: hidden;
+  z-index: 5;
   @media screen and (min-width: 500px) and (max-width: 799px) {
     top: -200px;
   }
@@ -217,22 +218,24 @@ export const BigMovie = styled(motion.div)`
 
 export const BigCover = styled.div`
   width: 100%;
-  height: 300px;
+  height: 300px; // 나중에 수정
   background-size: cover;
   background-position: center center;
+`;
+
+export const BigInfo = styled.div`
+  width: 100%;
+  height: 500px; // 나중에 수정
+  background: ${(props) => props.theme.black.darker};
 `;
 
 export const BigTitle = styled.h2`
   color: ${(props) => props.theme.white.lighter};
   font-size: 30px;
-  position: relative;
-  top: -50px;
   padding: 10px;
 `;
 
 export const BigOverview = styled.p`
   padding: 10px;
-  position: relative;
-  top: -50px;
   color: ${(props) => props.theme.white.lighter};
 `;

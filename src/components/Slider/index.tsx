@@ -154,7 +154,7 @@ function Slider({ data, title }: IMoviesProps) {
         </S.Slider>
       </S.Sliders>
       <AnimatePresence>
-        {homeMovieMathch && (
+        {clikedMovie && (
           <>
             <S.Overlay
               onClick={onOverlayClick}
@@ -171,14 +171,16 @@ function Slider({ data, title }: IMoviesProps) {
                 <>
                   <S.BigCover
                     style={{
-                      backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                      backgroundImage: `linear-gradient(to top, #181818, transparent), url(${makeImagePath(
                         clikedMovie.backdrop_path,
                         "w500"
                       )})`,
                     }}
                   />
-                  <S.BigTitle>{clikedMovie.title}</S.BigTitle>
-                  <S.BigOverview>{clikedMovie.overview}</S.BigOverview>
+                  <S.BigInfo>
+                    <S.BigTitle>{clikedMovie.title}</S.BigTitle>
+                    <S.BigOverview>{clikedMovie.overview}</S.BigOverview>
+                  </S.BigInfo>
                 </>
               )}
             </S.BigMovie>

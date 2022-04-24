@@ -66,3 +66,35 @@ export async function getUpcomingMovies() {
     )
   ).json();
 }
+
+interface genre {
+  id: number;
+  name: string;
+}
+
+export interface IGetMovie {
+  genres: genre[];
+  popularity: number;
+  release_date: string;
+  runtime: number;
+}
+
+export async function getMovie(movieId: number) {
+  return (
+    await fetch(
+      `${BASE_PATH}/movie/${movieId}?api_key=${API_KEY}&language=en-US&region=kr`
+    )
+  ).json();
+}
+
+export interface IGetMovieTrailer {
+  key: string;
+}
+
+export async function getMovieTrailer(movieId: number) {
+  return (
+    await fetch(
+      `${BASE_PATH}/movie/${movieId}/video?api_key=${API_KEY}&language=en-US&region=kr`
+    )
+  ).json();
+}
