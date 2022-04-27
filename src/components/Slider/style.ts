@@ -218,14 +218,14 @@ export const BigMovie = styled(motion.div)`
 
 export const BigCover = styled.div`
   width: 100%;
-  height: 300px; // 나중에 수정
-  background-size: cover;
+  height: 500px; // 나중에 수정 (width를 기준으로 설정해야 할듯)
+  background-size: 100% 100%;
   background-position: center center;
 `;
 
 export const BigInfo = styled.div`
   width: 100%;
-  height: 500px; // 나중에 수정
+  height: 300px; // 나중에 수정
   background: ${(props) => props.theme.black.darker};
 `;
 

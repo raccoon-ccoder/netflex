@@ -172,8 +172,7 @@ function Slider({ data, title }: IMoviesProps) {
                   <S.BigCover
                     style={{
                       backgroundImage: `linear-gradient(to top, #181818, transparent), url(${makeImagePath(
-                        clikedMovie.backdrop_path,
-                        "w500"
+                        clikedMovie.backdrop_path
                       )})`,
                     }}
                   />
