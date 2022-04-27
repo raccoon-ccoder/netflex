@@ -1,26 +1,19 @@
 import { useQuery } from "react-query";
-import { useEffect } from "react";
 import {
   getMovies,
+  getPopularMovies,
   getTopRatedMovies,
   getUpcomingMovies,
-  IGetMoviesResult,
-  IGetTopRatedMovies,
-  IGetUpcomingMovies,
 } from "../../api/api";
 import { makeImagePath } from "../../util/utils";
-import { AnimatePresence, useViewportScroll } from "framer-motion";
-import { useState } from "react";
 import Slider from "../../components/Slider";
 import * as S from "./style";
-import { Link, PathMatch, useMatch, useNavigate } from "react-router-dom";
 
 function Home() {
   const nowMoviesQuery = useQuery(["movies", "nowPlaying"], getMovies);
-
   const topMoviesQuery = useQuery(["movies", "topRated"], getTopRatedMovies);
-
   const comingMoviesQuery = useQuery(["movies", "upComing"], getUpcomingMovies);
+  const popularMoviesQuery = useQuery(["movies", "popular"], getPopularMovies);
   return (
     <S.Wrapper>
       {nowMoviesQuery.isLoading ? (
@@ -39,13 +32,15 @@ function Home() {
       <S.Main>
         {nowMoviesQuery.isLoading ||
         topMoviesQuery.isLoading ||
-        comingMoviesQuery.isLoading ? (
+        comingMoviesQuery.isLoading ||
+        popularMoviesQuery.isLoading ? (
           <S.Loader>Loading</S.Loader>
         ) : (
           <>
-            <Slider data={nowMoviesQuery.data} title="신규 콘텐츠" />
-            <Slider data={topMoviesQuery.data} title="지금 뜨는 콘텐츠" />
+            <Slider data={nowMoviesQuery.data} title="최신 콘텐츠" />
+            <Slider data={topMoviesQuery.data} title="역대 명작 콘텐츠" />
             <Slider data={comingMoviesQuery.data} title="예정 콘텐츠" />
+            <Slider data={popularMoviesQuery.data} title="지금 뜨는 콘텐츠" />
           </>
         )}
       </S.Main>

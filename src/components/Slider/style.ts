@@ -194,11 +194,9 @@ export const BigMovie = styled(motion.div)`
   position: absolute;
   max-width: 850px;
   width: calc(100% * 10 / 11);
-  height: 800px; // 나중에 수정
   left: 0;
   right: 0;
   margin: 0 auto;
-  /* background-color: ${(props) => props.theme.black.lighter}; */
   border-radius: 15px;
   overflow: hidden;
   z-index: 5;
@@ -218,14 +216,15 @@ export const BigMovie = styled(motion.div)`
 
 export const BigCover = styled.div`
   width: 100%;
-  height: 500px; // 나중에 수정 (width를 기준으로 설정해야 할듯)
+  height: 50vw; // 나중에 수정 (width를 기준으로 설정해야 할듯)
+  max-height: 550px;
   background-size: 100% 100%;
   background-position: center center;
 `;
 
 export const BigInfo = styled.div`
   width: 100%;
-  height: 300px; // 나중에 수정
+  padding: 20px;
   background: ${(props) => props.theme.black.darker};
 `;
 
@@ -235,7 +234,33 @@ export const BigTitle = styled.h2`
   padding: 10px;
 `;
 
-export const BigOverview = styled.p`
+export const BigDesc = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  column-gap: 2em;
+  text-overflow: clip;
   padding: 10px;
+`;
+
+export const BigOverview = styled.p`
+  display: block;
   color: ${(props) => props.theme.white.lighter};
+  text-overflow: clip;
+  overflow: hidden;
+`;
+
+export const BigOverviewText = styled.div``;
+
+export const BigDetails = styled.div``;
+export const BigGenres = styled.div`
+  margin-bottom: 20px;
+  span {
+    color: gray;
+  }
+`;
+
+export const BigDate = styled.div`
+  span {
+    color: gray;
+  }
 `;

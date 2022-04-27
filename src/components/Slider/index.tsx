@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
-import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
-import { IGetMoviesResult, IGetUpcomingMovies } from "../../api/api";
+import { AnimatePresence, useViewportScroll } from "framer-motion";
+import { getMovie, IGetMovie, IGetMoviesResult } from "../../api/api";
 import { Link, PathMatch, useMatch, useNavigate } from "react-router-dom";
 import { makeImagePath } from "../../util/utils";
 import * as S from "./style";
+import { useQuery } from "react-query";
 
 interface IMoviesProps {
   data: IGetMoviesResult;
@@ -15,6 +15,7 @@ function Slider({ data, title }: IMoviesProps) {
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [back, setBack] = useState(false);
+  const [movidId, setMovieId] = useState(0);
   // 클릭하면 이전 row가 사라지기 전에 다음 row가 사라지려고 하기에 gap이 커짐
   // 따라서 버튼 클릭시 한 슬라이더가 사라지고 다 사라졌는지 여부를 leaving
   // 다 사라졌을 경우 AnimatePresence onExitComplete={toggleLeaving}으로 설정
@@ -26,7 +27,7 @@ function Slider({ data, title }: IMoviesProps) {
     setBack(false);
     const totalMovies = data?.results.length;
     const maxIndex = Math.floor(totalMovies / offset);
-    setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+    setIndex((prev) => (prev === maxIndex - 1 ? 0 : prev + 1));
   };
 
   const decreaseIndex = () => {
@@ -46,6 +47,7 @@ function Slider({ data, title }: IMoviesProps) {
 
   const onClicked = (movieId: number) => {
     navigate(`/movies/${movieId}`);
+    setMovieId(movidId);
   };
 
   // 특정 영화 클릭한 상태에서 영화가 아닌 바깥 부분 클릭할 경우 팝업창 닫히게 함
@@ -64,9 +66,12 @@ function Slider({ data, title }: IMoviesProps) {
       (movie: any) => movie.id + "" === homeMovieMathch?.params.movieId
     );
 
-  console.log(clikedMovie);
+  const { isLoading, data: movieData } = useQuery<IGetMovie>(
+    ["movie", "clicked"],
+    () => getMovie(Number(homeMovieMathch?.params.movieId))
+  );
 
-  const [offset, setOffset] = useState(4);
+  const [offset, setOffset] = useState(5);
   const changeOffset = () => {
     if (500 <= window.innerWidth && window.innerWidth <= 799) {
       setOffset(3);
@@ -144,6 +149,7 @@ function Slider({ data, title }: IMoviesProps) {
                         />
                         <S.Info variants={S.infoVariants}>
                           <S.Title>{item.title}</S.Title>
+                          <h1>{}</h1>
                         </S.Info>
                       </S.BoxInner>
                     </S.Box>
@@ -178,7 +184,32 @@ function Slider({ data, title }: IMoviesProps) {
                   />
                   <S.BigInfo>
                     <S.BigTitle>{clikedMovie.title}</S.BigTitle>
-                    <S.BigOverview>{clikedMovie.overview}</S.BigOverview>
+                    <S.BigDesc>
+                      <S.BigOverview>
+                        <S.BigOverviewText>
+                          {clikedMovie.overview}
+                        </S.BigOverviewText>
+                      </S.BigOverview>
+
+                      {isLoading ? (
+                        ""
+                      ) : (
+                        <S.BigDetails>
+                          <S.BigGenres>
+                            <span>genre:</span>
+                            {movieData?.genres.map((i) => i.name).join(", ")}
+                          </S.BigGenres>
+                          <S.BigGenres>
+                            <span>popularity:</span>
+                            {movieData?.popularity.toFixed(1)}
+                          </S.BigGenres>
+                          <S.BigDate>
+                            <span>relase date:</span>
+                            {movieData?.release_date}
+                          </S.BigDate>
+                        </S.BigDetails>
+                      )}
+                    </S.BigDesc>
                   </S.BigInfo>
                 </>
               )}

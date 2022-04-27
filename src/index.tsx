@@ -26,6 +26,10 @@ const GlobalStyle = createGlobalStyle`
         outline: none;
       }
   }
+  html{
+    width: 100%;
+    height: 100%;
+  }
   body {
     color: ${(props) => props.theme.white.lighter};
     background-color: ${(props) => props.theme.black.darker};
@@ -33,6 +37,8 @@ const GlobalStyle = createGlobalStyle`
     font-weight: 300;
     font-family: 'Source Sans Pro', sans-serif;
     overflow-x: hidden;
+    width: 100%;
+    height: 100%;
   }
 `;
 
