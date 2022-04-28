@@ -5,17 +5,21 @@ import { Link, PathMatch, useMatch, useNavigate } from "react-router-dom";
 import { makeImagePath } from "../../util/utils";
 import * as S from "./style";
 import { useQuery } from "react-query";
+import { useRecoilState } from "recoil";
+import { bigMovieAtom } from "../../atom/atoms";
+import Modal from "../Modal";
 
 interface IMoviesProps {
   data: IGetMoviesResult;
   title: string;
+  content: string;
 }
 
-function Slider({ data, title }: IMoviesProps) {
+function Slider({ data, title, content }: IMoviesProps) {
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [back, setBack] = useState(false);
-  const [movidId, setMovieId] = useState(0);
+
   // 클릭하면 이전 row가 사라지기 전에 다음 row가 사라지려고 하기에 gap이 커짐
   // 따라서 버튼 클릭시 한 슬라이더가 사라지고 다 사라졌는지 여부를 leaving
   // 다 사라졌을 경우 AnimatePresence onExitComplete={toggleLeaving}으로 설정
@@ -45,13 +49,20 @@ function Slider({ data, title }: IMoviesProps) {
   const homeMovieMathch: PathMatch<string> | null =
     useMatch("/movies/:movieId");
 
-  const onClicked = (movieId: number) => {
-    navigate(`/movies/${movieId}`);
-    setMovieId(movidId);
+  const homeTvMatch: PathMatch<string> | null = useMatch("/tv/:contentId");
+
+  const [bigMovie, setBigMovie] = useRecoilState(bigMovieAtom);
+
+  const onClicked = (contentId: number) => {
+    content === "movie"
+      ? navigate(`/movies/${contentId}`)
+      : navigate(`/tv/${contentId}`);
+    setBigMovie([contentId, content]);
   };
 
   // 특정 영화 클릭한 상태에서 영화가 아닌 바깥 부분 클릭할 경우 팝업창 닫히게 함
-  const onOverlayClick = () => navigate("/");
+  const onOverlayClick = () =>
+    content === "movie" ? navigate("/") : navigate("/tv");
 
   // 사용자가 어떤 위치의 스크롤에 있어도 팝업창은 항상 화면 가운데에 나타나야 함
   const { scrollY } = useViewportScroll();
@@ -60,15 +71,16 @@ function Slider({ data, title }: IMoviesProps) {
   // 영화 클릭시 id params로 api를 통해 가져와도 되지만 시간이 걸리기에
   // 그동안 먼저 가져온 영화 목록들 중에서 현재 id parmas와 매치되는 영화 정보를 탐색해
   // 간략한 정보를 먼저 사용
-  const clikedMovie =
-    homeMovieMathch?.params.movieId &&
-    data?.results.find(
-      (movie: any) => movie.id + "" === homeMovieMathch?.params.movieId
-    );
+  // const clikedMovie =
+  //   homeMovieMathch?.params.movieId &&
+  //   data?.results.find(
+  //     (movie: any) => movie.id + "" === homeMovieMathch?.params.movieId
+  //   );
 
-  const { isLoading, data: movieData } = useQuery<IGetMovie>(
-    ["movie", "clicked"],
-    () => getMovie(Number(homeMovieMathch?.params.movieId))
+  const clikedMovie = data?.results.find((movie: any) =>
+    content === "movie"
+      ? movie.id + "" === homeMovieMathch?.params.movieId
+      : movie.id + "" === homeTvMatch?.params.contentId
   );
 
   const [offset, setOffset] = useState(5);
@@ -148,8 +160,7 @@ function Slider({ data, title }: IMoviesProps) {
                           bgphoto={makeImagePath(item.backdrop_path)}
                         />
                         <S.Info variants={S.infoVariants}>
-                          <S.Title>{item.title}</S.Title>
-                          <h1>{}</h1>
+                          <S.Title>{item.title || item.name}</S.Title>
                         </S.Info>
                       </S.BoxInner>
                     </S.Box>
@@ -168,7 +179,7 @@ function Slider({ data, title }: IMoviesProps) {
               exit={{ opacity: 0 }}
             ></S.Overlay>
             <S.BigMovie
-              layoutId={homeMovieMathch.params.movieId}
+              layoutId={clikedMovie.id + ""}
               // style={{
               //   top: scrollY.get() - 450,
               // }}
@@ -183,7 +194,9 @@ function Slider({ data, title }: IMoviesProps) {
                     }}
                   />
                   <S.BigInfo>
-                    <S.BigTitle>{clikedMovie.title}</S.BigTitle>
+                    <S.BigTitle>
+                      {clikedMovie.title || clikedMovie.name}
+                    </S.BigTitle>
                     <S.BigDesc>
                       <S.BigOverview>
                         <S.BigOverviewText>
@@ -191,24 +204,7 @@ function Slider({ data, title }: IMoviesProps) {
                         </S.BigOverviewText>
                       </S.BigOverview>
 
-                      {isLoading ? (
-                        ""
-                      ) : (
-                        <S.BigDetails>
-                          <S.BigGenres>
-                            <span>genre:</span>
-                            {movieData?.genres.map((i) => i.name).join(", ")}
-                          </S.BigGenres>
-                          <S.BigGenres>
-                            <span>popularity:</span>
-                            {movieData?.popularity.toFixed(1)}
-                          </S.BigGenres>
-                          <S.BigDate>
-                            <span>relase date:</span>
-                            {movieData?.release_date}
-                          </S.BigDate>
-                        </S.BigDetails>
-                      )}
+                      <Modal />
                     </S.BigDesc>
                   </S.BigInfo>
                 </>

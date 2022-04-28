@@ -250,17 +250,3 @@ export const BigOverview = styled.p`
 `;
 
 export const BigOverviewText = styled.div``;
-
-export const BigDetails = styled.div``;
-export const BigGenres = styled.div`
-  margin-bottom: 20px;
-  span {
-    color: gray;
-  }
-`;
-
-export const BigDate = styled.div`
-  span {
-    color: gray;
-  }
-`;
