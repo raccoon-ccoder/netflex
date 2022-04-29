@@ -17,6 +17,7 @@ export interface IMovie {
   video?: boolean;
   vote_average: number;
   vote_count: number;
+  media_type?: string;
 }
 
 export interface IGetMoviesResult {
@@ -66,8 +67,8 @@ interface genre {
 export interface IGetMovie {
   genres: genre[];
   popularity: number;
-  release_date: string;
-  runtime: number;
+  release_date?: string;
+  first_air_date?: string;
 }
 
 export async function getMovie(movieId: number | undefined) {
@@ -98,10 +99,42 @@ export async function getPopularTvShows() {
   ).json();
 }
 
+export async function getTopRatedTvShows() {
+  return (
+    await fetch(
+      `${BASE_PATH}/tv/top_rated?api_key=${API_KEY}&language=en-US&page=1&region=kr`
+    )
+  ).json();
+}
+
+export async function getOnTheAirTvShows() {
+  return (
+    await fetch(
+      `${BASE_PATH}/tv/on_the_air?api_key=${API_KEY}&language=en-US&page=1&region=kr`
+    )
+  ).json();
+}
+
+export async function getAiringTodayTvShows() {
+  return (
+    await fetch(
+      `${BASE_PATH}/tv/airing_today?api_key=${API_KEY}&language=en-US&page=1&region=kr`
+    )
+  ).json();
+}
+
 export async function getTv(tvId: number | undefined) {
   return (
     await fetch(
       `${BASE_PATH}/tv/${tvId}?api_key=${API_KEY}&language=en-US&region=kr`
+    )
+  ).json();
+}
+
+export async function getResultByKeyword(keyword: string | null) {
+  return (
+    await fetch(
+      `${BASE_PATH}/search/multi?api_key=${API_KEY}&query=${keyword}&language=en-US&region=kr`
     )
   ).json();
 }

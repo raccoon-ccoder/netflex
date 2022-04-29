@@ -1,96 +1,68 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
+export const Wrapper = styled.div`
+  background: ${(props) => props.theme.black.darker};
+  height: 100%;
+  position: relative;
+  top: 70px;
+`;
+
+export const Loader = styled.div`
+  height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Main = styled.main`
+  width: 100%;
+  /* position: relative;
+  top: -17vw; */
+`;
+
+// search motion
+
 export const Sliders = styled.div`
-  margin: 0.5vw 0 0 0;
+  margin: 3vw 0;
   position: relative;
   box-sizing: border-box;
   padding: 0 4%;
   box-sizing: border-box;
+  width: 100%;
+  height: 100%;
 `;
 
 export const SliderTitle = styled.h2`
   line-height: 1.3;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 0 0 0;
-  box-sizing: border-box;
-  a {
-    font-size: 1.6vw;
-    color: #e5e5e5;
-    font-weight: 700;
-    margin: 0.5em 0;
-    text-decoration: none;
-    display: inline-block;
-    min-width: 6em;
-    div {
-      /* display: table-cell; */
-      vertical-align: bottom;
-      line-height: 2vw;
-      font-size: 1.6vw;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-`;
-
-export const ArrowBox = styled.div``;
-
-export const Arrow = styled.svg`
-  width: 2vw;
-  height: 2vw;
-  border: 2px solid white;
-  border-radius: 50%;
-  cursor: pointer;
-  path {
-    fill: white;
-  }
+  margin-bottom: 20px;
 `;
 
 export const Slider = styled.div`
   position: relative;
   @media screen and (min-width: 500px) and (max-width: 799px) {
-    height: 17vw;
+    height: 14vw;
   }
   @media screen and (min-width: 800px) and (max-width: 1099px) {
     height: 12vw;
   }
   @media screen and (min-width: 1100px) {
-    height: 9vw;
+    height: 11vw;
   }
 `;
 
 export const Row = styled(motion.div)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  height: 100%;
   width: 100%;
-  position: absolute;
 `;
 
-export const rowVariants = {
-  hidden: (back: boolean) => {
-    return { x: back ? -window.innerWidth : window.innerWidth };
-  },
-  visible: {
-    x: 0,
-  },
-  exit: (back: boolean) => {
-    return {
-      x: back ? window.innerWidth : -window.innerWidth,
-    };
-  },
-};
-
 export const RowItem = styled(motion.div)`
-  padding: 0 0.2vw;
+  padding: 0.2vw;
   box-sizing: border-box;
   cursor: pointer;
-  border-radius: 0.5vw;
+  border-radius: 0.8vw;
   overflow: hidden;
+  float: left;
   &:first-child {
     transform-origin: center left;
   }
@@ -210,16 +182,16 @@ export const BigMovie = styled(motion.div)`
   overflow: hidden;
   z-index: 5;
   @media screen and (min-width: 500px) and (max-width: 799px) {
-    top: -200px;
+    top: 1vw;
   }
   @media screen and (min-width: 800px) and (max-width: 1099px) {
-    top: -310px;
+    top: 1vw;
   }
   @media screen and (min-width: 1100px) and (max-width: 1399px) {
-    top: -450px;
+    top: 1vw;
   }
   @media screen and (min-width: 1400px) {
-    top: -500px;
+    top: 1vw;
   }
 `;
 

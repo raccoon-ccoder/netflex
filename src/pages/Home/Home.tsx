@@ -21,7 +21,7 @@ function Home() {
       ) : (
         <S.Banner
           bgPhoto={makeImagePath(
-            nowMoviesQuery.data?.results[1].backdrop_path || ""
+            nowMoviesQuery.data?.results[0].backdrop_path || ""
           )}
         >
           <S.Title>{nowMoviesQuery.data?.results[0].title}</S.Title>

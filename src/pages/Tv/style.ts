@@ -32,6 +32,11 @@ export const Title = styled.h2`
 export const Overview = styled.p`
   font-size: 1.8vw;
   width: 50%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const Main = styled.main`

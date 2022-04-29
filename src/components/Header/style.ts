@@ -54,6 +54,9 @@ export const logoVariants = {
 export const Items = styled.ul`
   display: flex;
   align-items: center;
+  @media screen and (max-width: 650px) {
+    visibility: hidden;
+  }
 `;
 
 export const Item = styled.li`

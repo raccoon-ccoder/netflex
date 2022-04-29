@@ -5,13 +5,13 @@ import { getMovie, getTv, IGetMovie } from "../../api/api";
 import * as S from "./style";
 
 function Modal() {
-  const content = useRecoilValue(bigMovieAtom);
+  const [contentId, contentName] = useRecoilValue(bigMovieAtom);
   const { isLoading, data } = useQuery<IGetMovie>(["movie", "test"], () =>
-    content[1] === "movie"
-      ? getMovie(Number(content[0]))
-      : getTv(Number(content[0]))
+    contentName === "movie"
+      ? getMovie(Number(contentId))
+      : getTv(Number(contentId))
   );
-  console.log(data);
+
   return isLoading ? null : (
     <S.BigDetails>
       <S.BigGenres>
@@ -24,7 +24,7 @@ function Modal() {
       </S.BigGenres>
       <S.BigDate>
         <span>relase date:</span>
-        {data?.release_date}
+        {data?.release_date || data?.first_air_date}
       </S.BigDate>
     </S.BigDetails>
   );

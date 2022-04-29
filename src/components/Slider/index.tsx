@@ -180,9 +180,9 @@ function Slider({ data, title, content }: IMoviesProps) {
             ></S.Overlay>
             <S.BigMovie
               layoutId={clikedMovie.id + ""}
-              // style={{
-              //   top: scrollY.get() - 450,
-              // }}
+              style={{
+                top: scrollY.get() - 450,
+              }}
             >
               {clikedMovie && (
                 <>
