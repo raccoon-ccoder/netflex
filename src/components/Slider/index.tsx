@@ -5,7 +5,7 @@ import { Link, PathMatch, useMatch, useNavigate } from "react-router-dom";
 import { makeImagePath } from "../../util/utils";
 import * as S from "./style";
 import { useQuery } from "react-query";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { bigMovieAtom } from "../../atom/atoms";
 import Modal from "../Modal";
 
@@ -51,7 +51,7 @@ function Slider({ data, title, content }: IMoviesProps) {
 
   const homeTvMatch: PathMatch<string> | null = useMatch("/tv/:contentId");
 
-  const [bigMovie, setBigMovie] = useRecoilState(bigMovieAtom);
+  const setBigMovie = useSetRecoilState(bigMovieAtom);
 
   const onClicked = (contentId: number) => {
     content === "movie"
@@ -66,16 +66,6 @@ function Slider({ data, title, content }: IMoviesProps) {
 
   // 사용자가 어떤 위치의 스크롤에 있어도 팝업창은 항상 화면 가운데에 나타나야 함
   const { scrollY } = useViewportScroll();
-
-  // 클릭한 영화 정보(사진) 가져오기
-  // 영화 클릭시 id params로 api를 통해 가져와도 되지만 시간이 걸리기에
-  // 그동안 먼저 가져온 영화 목록들 중에서 현재 id parmas와 매치되는 영화 정보를 탐색해
-  // 간략한 정보를 먼저 사용
-  // const clikedMovie =
-  //   homeMovieMathch?.params.movieId &&
-  //   data?.results.find(
-  //     (movie: any) => movie.id + "" === homeMovieMathch?.params.movieId
-  //   );
 
   const clikedMovie = data?.results.find((movie: any) =>
     content === "movie"
@@ -181,7 +171,7 @@ function Slider({ data, title, content }: IMoviesProps) {
             <S.BigMovie
               layoutId={clikedMovie.id + ""}
               style={{
-                top: scrollY.get() - 450,
+                top: scrollY.get() - 200,
               }}
             >
               {clikedMovie && (

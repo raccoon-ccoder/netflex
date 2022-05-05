@@ -19,7 +19,7 @@ function Search() {
   const location = useLocation();
   const keyword = new URLSearchParams(location.search).get("keyword");
 
-  const { isLoading, isSuccess, data } = useQuery<IGetMoviesResult>(
+  const { isLoading, data } = useQuery<IGetMoviesResult>(
     ["search", keyword],
     () => getResultByKeyword(keyword)
   );
