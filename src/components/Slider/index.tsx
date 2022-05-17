@@ -6,16 +6,17 @@ import { makeImagePath } from "../../util/utils";
 import * as S from "./style";
 import { useQuery } from "react-query";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { bigMovieAtom } from "../../atom/atoms";
+import { contentAtom } from "../../atom/atoms";
 import Modal from "../Modal";
 
 interface IMoviesProps {
   data: IGetMoviesResult;
   title: string;
   content: string;
+  keyword: string;
 }
 
-function Slider({ data, title, content }: IMoviesProps) {
+function Slider({ data, title, content, keyword }: IMoviesProps) {
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [back, setBack] = useState(false);
@@ -29,8 +30,8 @@ function Slider({ data, title, content }: IMoviesProps) {
     if (leaving) return;
     setLeaving(true);
     setBack(false);
-    const totalMovies = data?.results.length;
-    const maxIndex = Math.floor(totalMovies / offset);
+    const totalContents = data?.results.length;
+    const maxIndex = Math.floor(totalContents / offset);
     setIndex((prev) => (prev === maxIndex - 1 ? 0 : prev + 1));
   };
 
@@ -38,8 +39,8 @@ function Slider({ data, title, content }: IMoviesProps) {
     if (leaving) return;
     setLeaving(true);
     setBack(true);
-    const totalMovies = data?.results.length;
-    const maxIndex = Math.floor(totalMovies / offset);
+    const totalContents = data?.results.length;
+    const maxIndex = Math.floor(totalContents / offset);
     setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
   };
 
@@ -51,13 +52,13 @@ function Slider({ data, title, content }: IMoviesProps) {
 
   const homeTvMatch: PathMatch<string> | null = useMatch("/tv/:contentId");
 
-  const setBigMovie = useSetRecoilState(bigMovieAtom);
+  const [getContent, setBigMovie] = useRecoilState(contentAtom);
 
   const onClicked = (contentId: number) => {
     content === "movie"
       ? navigate(`/movies/${contentId}`)
       : navigate(`/tv/${contentId}`);
-    setBigMovie([contentId, content]);
+    setBigMovie([contentId, content, keyword]);
   };
 
   // 특정 영화 클릭한 상태에서 영화가 아닌 바깥 부분 클릭할 경우 팝업창 닫히게 함
@@ -67,8 +68,8 @@ function Slider({ data, title, content }: IMoviesProps) {
   // 사용자가 어떤 위치의 스크롤에 있어도 팝업창은 항상 화면 가운데에 나타나야 함
   const { scrollY } = useViewportScroll();
 
-  const clikedMovie = data?.results.find((movie: any) =>
-    content === "movie"
+  const clikedContent = data?.results.find((movie: any) =>
+    keyword === getContent[2] && content === "movie"
       ? movie.id + "" === homeMovieMathch?.params.movieId
       : movie.id + "" === homeTvMatch?.params.contentId
   );
@@ -135,19 +136,25 @@ function Slider({ data, title, content }: IMoviesProps) {
                 .slice(offset * index, offset * index + offset)
                 .map((item) => (
                   <S.RowItem
-                    layoutId={item.id + ""}
+                    layoutId={keyword + item.id}
                     key={item.id}
                     variants={S.boxVariants}
                     initial="normal"
                     whileHover="hover"
-                    transition={{ type: "tween" }}
+                    transition={{ type: "tween", duration: 0.4 }}
                     onClick={() => onClicked(item.id)}
                   >
-                    <S.Box bgphoto={makeImagePath(item.backdrop_path)}>
+                    <S.Box
+                      bgphoto={makeImagePath(
+                        item.backdrop_path || item.poster_path
+                      )}
+                    >
                       <S.BoxInner>
                         <S.Img
                           variants={S.infoVariants}
-                          bgphoto={makeImagePath(item.backdrop_path)}
+                          bgphoto={makeImagePath(
+                            item.backdrop_path || item.poster_path
+                          )}
                         />
                         <S.Info variants={S.infoVariants}>
                           <S.Title>{item.title || item.name}</S.Title>
@@ -161,45 +168,40 @@ function Slider({ data, title, content }: IMoviesProps) {
         </S.Slider>
       </S.Sliders>
       <AnimatePresence>
-        {clikedMovie && (
+        {clikedContent && (
           <>
             <S.Overlay
               onClick={onOverlayClick}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             ></S.Overlay>
-            <S.BigMovie
-              layoutId={clikedMovie.id + ""}
+            <S.BigContent
+              layoutId={getContent[2] + "" + getContent[0]}
               style={{
                 top: scrollY.get() - 200,
               }}
             >
-              {clikedMovie && (
+              {clikedContent && (
                 <>
                   <S.BigCover
                     style={{
                       backgroundImage: `linear-gradient(to top, #181818, transparent), url(${makeImagePath(
-                        clikedMovie.backdrop_path
+                        clikedContent.backdrop_path || clikedContent.poster_path
                       )})`,
                     }}
                   />
                   <S.BigInfo>
                     <S.BigTitle>
-                      {clikedMovie.title || clikedMovie.name}
+                      {clikedContent.title || clikedContent.name}
                     </S.BigTitle>
                     <S.BigDesc>
-                      <S.BigOverview>
-                        <S.BigOverviewText>
-                          {clikedMovie.overview}
-                        </S.BigOverviewText>
-                      </S.BigOverview>
-
+                      <S.BigOverview>{clikedContent.overview}</S.BigOverview>
                       <Modal />
                     </S.BigDesc>
                   </S.BigInfo>
                 </>
               )}
-            </S.BigMovie>
+            </S.BigContent>
           </>
         )}
       </AnimatePresence>

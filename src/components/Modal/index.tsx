@@ -1,11 +1,11 @@
 import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
-import { bigMovieAtom } from "../../atom/atoms";
+import { contentAtom } from "../../atom/atoms";
 import { getMovie, getTv, IGetMovie } from "../../api/api";
 import * as S from "./style";
 
 function Modal() {
-  const [contentId, contentName] = useRecoilValue(bigMovieAtom);
+  const [contentId, contentName, keyword] = useRecoilValue(contentAtom);
   const { isLoading, data } = useQuery<IGetMovie>(["movie", "test"], () =>
     contentName === "movie"
       ? getMovie(Number(contentId))

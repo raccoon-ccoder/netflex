@@ -199,7 +199,7 @@ export const Overlay = styled(motion.div)`
   opacity: 0;
 `;
 
-export const BigMovie = styled(motion.div)`
+export const BigContent = styled(motion.div)`
   position: absolute;
   max-width: 850px;
   width: calc(100% * 10 / 11);
@@ -208,7 +208,7 @@ export const BigMovie = styled(motion.div)`
   margin: 0 auto;
   border-radius: 15px;
   overflow: hidden;
-  z-index: 5;
+  z-index: 10;
   @media screen and (min-width: 500px) and (max-width: 799px) {
     top: -200px;
   }
@@ -257,5 +257,3 @@ export const BigOverview = styled.p`
   text-overflow: clip;
   overflow: hidden;
 `;
-
-export const BigOverviewText = styled.div``;

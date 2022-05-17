@@ -41,21 +41,25 @@ function Home() {
               data={nowMoviesQuery.data}
               title="최신 콘텐츠"
               content="movie"
+              keyword="new"
             />
             <Slider
               data={topMoviesQuery.data}
               title="역대 명작 콘텐츠"
               content="movie"
+              keyword="top"
             />
             <Slider
               data={comingMoviesQuery.data}
               title="예정 콘텐츠"
               content="movie"
+              keyword="coming"
             />
             <Slider
               data={popularMoviesQuery.data}
               title="지금 뜨는 콘텐츠"
               content="movie"
+              keyword="popular"
             />
           </>
         )}

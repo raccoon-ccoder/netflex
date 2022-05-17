@@ -1,16 +1,10 @@
 import { AnimatePresence, useViewportScroll } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import {
-  PathMatch,
-  useLocation,
-  useMatch,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useLocation } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import { getResultByKeyword, IGetMoviesResult } from "../../api/api";
-import { bigMovieAtom } from "../../atom/atoms";
+import { contentAtom } from "../../atom/atoms";
 import Modal from "../../components/Modal";
 import { makeImagePath } from "../../util/utils";
 import * as S from "./style";
@@ -24,7 +18,7 @@ function Search() {
     () => getResultByKeyword(keyword)
   );
 
-  const [bigMovie, setBigMovie] = useRecoilState(bigMovieAtom);
+  const [bigMovie, setBigMovie] = useRecoilState(contentAtom);
 
   const onClicked = (contentId: number, contentType: string) => {
     setBigMovie([contentId, contentType]);

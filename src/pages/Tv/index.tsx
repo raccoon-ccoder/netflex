@@ -43,21 +43,25 @@ function Tv() {
               data={popularTvQuery.data}
               title="현재 인기 콘텐츠"
               content="tv"
+              keyword="popular"
             />
             <Slider
               data={airingTodayTvQuery.data}
               title="따끈따끈한 신작 콘텐츠"
               content="tv"
+              keyword="airing"
             />
             <Slider
               data={topRatedTvQuery.data}
               title="찬사를 받은 콘텐츠"
               content="tv"
+              keyword="top"
             />
             <Slider
               data={onTheAirTvQuery.data}
               title="현재 방영중인 콘텐츠"
               content="tv"
+              keyword="ontheair"
             />
           </>
         )}
