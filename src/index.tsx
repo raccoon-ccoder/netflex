@@ -42,7 +42,13 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 300 * 1000,
+    },
+  },
+});
 
 root.render(
   <React.StrictMode>
