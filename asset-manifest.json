@@ -1,10 +1,18 @@
 {
   "files": {
-    "main.js": "/netflex/static/js/main.2653f0a5.js",
+    "main.js": "/netflex/static/js/main.60910239.js",
+    "static/js/917.49f248d9.chunk.js": "/netflex/static/js/917.49f248d9.chunk.js",
+    "static/js/950.97fbf64c.chunk.js": "/netflex/static/js/950.97fbf64c.chunk.js",
+    "static/js/59.bc7e4507.chunk.js": "/netflex/static/js/59.bc7e4507.chunk.js",
+    "static/js/947.c91fe3cd.chunk.js": "/netflex/static/js/947.c91fe3cd.chunk.js",
     "index.html": "/netflex/index.html",
-    "main.2653f0a5.js.map": "/netflex/static/js/main.2653f0a5.js.map"
+    "main.60910239.js.map": "/netflex/static/js/main.60910239.js.map",
+    "917.49f248d9.chunk.js.map": "/netflex/static/js/917.49f248d9.chunk.js.map",
+    "950.97fbf64c.chunk.js.map": "/netflex/static/js/950.97fbf64c.chunk.js.map",
+    "59.bc7e4507.chunk.js.map": "/netflex/static/js/59.bc7e4507.chunk.js.map",
+    "947.c91fe3cd.chunk.js.map": "/netflex/static/js/947.c91fe3cd.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.2653f0a5.js"
+    "static/js/main.60910239.js"
   ]
 }
